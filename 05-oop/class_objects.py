@@ -366,3 +366,37 @@ shop.remove_product("P002")
 shop.update_quantity("P003", 5)
 shop.display_cart()
 shop.apply_discount("SAVE20")
+
+
+# temparature Converter
+
+class Temperature:
+    def __init__(self, celsius):
+        if celsius < -273.15:
+            raise ValueError("Temperature cannot be below absolute zero (-273.15°C).")  
+        self.celsius = celsius
+
+    def celsius_to_fahrenheit(self):
+        return (self.celsius * 9/5) + 32
+
+    def celsius_to_kelvin(self):
+        return self.celsius + 273.15
+
+    def update_temperature(self, value):
+        if value < -273.15:
+            raise ValueError("Temperature cannot be below absolute zero (-273.15°C).")
+        self.celsius = value
+        print(f"Temperature updated to {self.celsius}°C.")
+
+    def display_temperature(self):
+        print(f"Temperature: {self.celsius}°C, {self.celsius_to_fahrenheit()}°F, {self.celsius_to_kelvin()}K")
+
+t1 = Temperature(25)
+t1.display_temperature()
+t1.update_temperature(30)
+t1.display_temperature()
+
+t2 = Temperature(-300)  
+t2.display_temperature()
+
+
