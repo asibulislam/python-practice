@@ -400,3 +400,144 @@ t2 = Temperature(-300)
 t2.display_temperature()
 
 
+#University Course Registration.
+class Student:
+    def __init__(self, name, student_id):
+        self.name = name
+        self.student_id = student_id
+        self.registered_courses = []
+
+    def register_course(self, course):
+        if course not in self.registered_courses:
+            self.registered_courses.append(course)
+            return True
+        return False
+
+    def display_student_info(self):
+        print(f"Name: {self.name}, Student ID: {self.student_id}")
+        print("Registered Courses:")
+        for course in self.registered_courses:
+            print(f"- {course.course_name} ({course.course_code})")
+
+
+class Course:
+    def __init__(self, course_name, course_code, max_students):
+        self.course_name = course_name
+        self.course_code = course_code
+        self.max_students = max_students
+        self.registered_students = []
+
+    def is_full(self):
+        return len(self.registered_students) >= self.max_students
+
+    def add_student(self, student):
+        if student in self.registered_students or self.is_full():
+            return False
+        self.registered_students.append(student)
+        return True
+
+    def remove_student(self, student):
+        if student in self.registered_students:
+            self.registered_students.remove(student)
+            if self in student.registered_courses:
+                student.registered_courses.remove(self)
+            print(f"{student.name} has been removed from {self.course_name}.")
+        else:
+            print(f"{student.name} is not registered for {self.course_name}.")
+
+    def display_course_info(self):
+        print(f"Course Name: {self.course_name}, Course Code: {self.course_code}, Max Students: {self.max_students}")
+        print("Registered Students:")
+        for i, student in enumerate(self.registered_students, start=1):
+            print(f"{i}. {student.name}")
+
+
+class University:
+    def __init__(self, university_name):
+        self.university_name = university_name
+        self.students = []
+        self.courses = []
+
+    def _find_student(self, student_id):
+        return next((s for s in self.students if s.student_id == student_id), None)
+
+    def _find_course(self, course_code):
+        return next((c for c in self.courses if c.course_code == course_code), None)
+
+    def add_student(self, student):
+        if self._find_student(student.student_id):
+            print(f"Student ID {student.student_id} already exists.")
+            return
+        self.students.append(student)
+        print(f"Student added: {student.name}")
+
+    def add_course(self, course):
+        if self._find_course(course.course_code):
+            print(f"Course code {course.course_code} already exists.")
+            return
+        self.courses.append(course)
+        print(f"Course added: {course.course_name}")
+
+    def register_student(self, student_id, course_code):
+        student = self._find_student(student_id)
+        course = self._find_course(course_code)
+
+        if not student:
+            print(f"Student with ID {student_id} not found.")
+            return
+        if not course:
+            print(f"Course with code {course_code} not found.")
+            return
+        if student in course.registered_students:
+            print("Already registered!")
+            return
+        if course.is_full():
+            print(f"Cannot register {student.name}. {course.course_name} is full.")
+            return
+
+        course.add_student(student)
+        student.register_course(course)
+        print("Registration successful!")
+
+    def display_registered_students(self, course_code):
+        course = self._find_course(course_code)
+        if course:
+            course.display_course_info()
+        else:
+            print(f"Course with code {course_code} not found.")
+
+    def display_available_seats(self, course_code):
+        course = self._find_course(course_code)
+        if course:
+            seats = course.max_students - len(course.registered_students)
+            print(f"Available Seats: {seats}")
+        else:
+            print(f"Course with code {course_code} not found.")
+
+
+# Test with the example
+uni = University("First Capital University")
+
+alice = Student("Alice", 1)
+bob = Student("Bob", 2)
+uni.add_student(alice)
+uni.add_student(bob)
+uni.add_student(Student("Fake Alice", 1))      
+
+python = Course("Python Programming", "CSE101", 30)
+uni.add_course(python)
+uni.add_course(Course("Duplicate", "CSE101", 5))  
+
+print("\nRegistering Alice...")
+uni.register_student(1, "CSE101")
+print("Registering Alice again...")
+uni.register_student(1, "CSE101")
+print("Registering Bob...")
+uni.register_student(2, "CSE101")
+uni.register_student(99, "CSE101")             
+uni.register_student(1, "XXX")                 
+
+print()
+uni.display_available_seats("CSE101")
+print()
+uni.display_registered_students("CSE101")
