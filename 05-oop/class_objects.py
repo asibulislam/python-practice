@@ -651,4 +651,93 @@ a3 = Triangle(8, 6)
 area = [a1, a2, a3]
 for a in area:
     a.display_area()
-    
+
+
+# Bank Account Management System
+class BankAccount:
+    def __init__(self, account_holder, account_number, balance):
+        if balance < 0:
+            raise ValueError("Initial balance cannot be negative.")
+        self.account_holder = account_holder
+        self.account_number = account_number
+        self.__balance = balance
+
+    def deposit(self, amount):
+        if amount <= 0:
+            raise ValueError("Deposit amount must be positive.")
+        self.__balance += amount
+        print(f"Your current balance after deposit: {self.get_balance()}")
+        return self.__balance
+
+    def withdraw(self, amount):
+        if amount <= 0:
+            raise ValueError("Withdrawal amount must be positive.")
+        if amount > self._max_withdrawable():
+            raise ValueError("Insufficient balance.")
+        self.__balance -= amount
+        print(f"Withdrawn: {amount}. Available balance: {self.get_balance()}")
+        return self.__balance
+
+    def _max_withdrawable(self):
+        return self.__balance
+
+    def get_balance(self):
+        return self.__balance
+
+    def describe(self):
+        return f"{self.account_holder} ({self.account_number}) | Basic account | Balance: {self.get_balance()}"
+
+
+class SavingsAccount(BankAccount):
+    def __init__(self, account_holder, account_number, balance, interest_rate):
+        super().__init__(account_holder, account_number, balance)
+        if not 0 <= interest_rate <= 100:
+            raise ValueError("Interest rate must be between 0 and 100.")
+        self.interest_rate = interest_rate
+
+    def calculate_interest(self):
+        return self.get_balance() * (self.interest_rate / 100)
+
+    def describe(self):
+        return (f"{self.account_holder} ({self.account_number}) | Savings account | "
+                f"Balance: {self.get_balance()} | Interest rate: {self.interest_rate}%")
+
+
+class CurrentAccount(BankAccount):
+    def __init__(self, account_holder, account_number, balance, overdraft_limit):
+        super().__init__(account_holder, account_number, balance)
+        if overdraft_limit < 0:
+            raise ValueError("Overdraft limit cannot be negative.")
+        self.overdraft_limit = overdraft_limit
+
+    def _max_withdrawable(self):
+        return self.get_balance() + self.overdraft_limit
+
+    def describe(self):
+        return (f"{self.account_holder} ({self.account_number}) | Current account | "
+                f"Balance: {self.get_balance()} | Overdraft limit: {self.overdraft_limit}")
+
+
+
+accounts = [
+    CurrentAccount("Asibul Islam", 1003105, 5000, 20000),
+    SavingsAccount("Khalid Mamun", 100512, 50000, 10),
+    BankAccount("Amanul Islam", 1002193, 3000),
+]
+
+for account in accounts:
+    print(account.describe())
+    print("-" * 40)
+
+bad_cases = [
+    lambda: BankAccount("Test", 1, -100),
+    lambda: SavingsAccount("Test", 2, 1000, -5),
+    lambda: SavingsAccount("Test", 3, 1000, 150),
+    lambda: CurrentAccount("Test", 4, 1000, -2000),
+]
+
+for make_account in bad_cases:
+    try:
+        make_account()
+    except ValueError as e:
+        print(f"Error: {e}")
