@@ -599,3 +599,56 @@ for emp in employees:
     print(f"Total Salary: {emp.calculate_salary()}")
     print()
 
+#Shape Area Calculator
+class Shape:
+    def calculate_area(self):
+        return 0
+    def display_area(self):
+        area = self.calculate_area()
+        print(f"Area: {area}")
+
+
+class Rectangle(Shape):
+    def __init__(self, length, width):
+        if length <= 0:
+            raise ValueError("Length must be a positive value.")
+        if width <= 0:
+            raise ValueError("Width must be a positive value.")
+        self.length = length
+        self.width = width
+
+    def calculate_area(self):
+        return self.length * self.width
+
+
+class Circle(Shape):
+    def __init__(self, radius):
+        if radius <= 0:
+            raise ValueError("Radius must be a positive value.")
+
+        self.radius = radius
+
+    def calculate_area(self):
+        return 3.14159 * self.radius ** 2
+
+class Triangle(Shape):
+    def __init__(self, base, height):
+        if base <= 0:
+            raise ValueError("Base must be a positive value.")
+        if height <= 0:
+            raise ValueError("Height must be a positive value.")
+        self.base = base
+        self.height = height
+
+    def calculate_area(self):
+        return 0.5 * self.base * self.height
+
+
+    
+a1 = Rectangle(10, 5)
+a2 = Circle(7)
+a3 = Triangle(8, 6)
+area = [a1, a2, a3]
+for a in area:
+    a.display_area()
+    
