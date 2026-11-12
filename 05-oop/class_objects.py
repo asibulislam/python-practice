@@ -541,3 +541,61 @@ print()
 uni.display_available_seats("CSE101")
 print()
 uni.display_registered_students("CSE101")
+
+
+#Employee Management System
+class Employee:
+    def __init__(self, name, employee_id, base_salary):
+        if base_salary <= 0:
+            raise ValueError("Base salary must be a positive value.")
+        self.name = name
+        self.employee_id = employee_id
+        
+        self.base_salary = base_salary
+
+    def display_info(self):
+        print(f"Name: {self.name}, Employee Id: {self.employee_id}, Base Salary: {self.base_salary}")
+
+    def calculate_salary(self):
+        return self.base_salary
+
+class Developer(Employee):
+    def __init__(self, name, employee_id, base_salary, programming_language, bonus=0):
+        super().__init__(name, employee_id, base_salary)
+        self.programming_language = programming_language
+        self.bonus = bonus
+
+    def display_info(self):
+        super().display_info()
+        print(f"Programming Language: {self.programming_language}")
+
+    def calculate_salary(self):
+        return self.base_salary + self.bonus
+
+class Manager(Employee):
+    def __init__(self, name, employee_id, base_salary, department, allowance=0):
+        super().__init__(name, employee_id, base_salary)
+        self.department = department
+        self.allowance = allowance
+
+    def display_info(self):
+        super().display_info()
+        print(f"Department: {self.department}")
+
+    def calculate_salary(self):
+        return self.base_salary + self.allowance
+
+
+emp1 = Developer("Alice", "D001", 5000, "Python", bonus=1000)
+emp2 = Manager("Bob", "M001", 6000, "IT", allowance=1500)
+emp3 = Employee("Charlie", "E001", 4000)
+emp4 = Developer("David", "D002", 5500, "Java", bonus=1200)
+emp5 = Manager("Eve", "M002", 6500, "HR", allowance=2000)
+emp6 = Employee("Frank", "E002", 4500)
+
+employees = [emp1, emp2, emp3, emp4, emp5, emp6]
+for emp in employees:
+    emp.display_info()
+    print(f"Total Salary: {emp.calculate_salary()}")
+    print()
+
